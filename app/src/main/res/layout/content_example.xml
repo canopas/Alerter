@@ -169,5 +169,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/right_icon_on_top" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnShowAlertWithOverlay"
+            style="@style/ExampleButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/with_overlay" />
     </LinearLayout>
 </ScrollView>

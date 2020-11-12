@@ -1,5 +1,7 @@
 package com.tapadoo.alerter
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Context
@@ -12,6 +14,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Button
@@ -59,6 +62,7 @@ class Alert @JvmOverloads constructor(context: Context,
     private var showRightIcon: Boolean = false
     private var enableClickAnimation: Boolean = true
     private var enableRightIconPurse = true
+    private var enableOverlay = false
 
     private var runningAnimation: Runnable? = null
 
@@ -259,6 +263,15 @@ class Alert @JvmOverloads constructor(context: Context,
                     flRightIconContainer?.visibility = View.GONE
                 }
             }
+
+            if (enableOverlay) {
+                overlayView.visibility = View.VISIBLE
+                overlayView.animate().alpha(1f)
+                        .setDuration(ALERT_OVERLAY_FADE_IN_DURATION)
+                        .setInterpolator(AccelerateInterpolator())
+            } else {
+                overlayView.visibility = View.GONE
+            }
         }
     }
 
@@ -289,6 +302,12 @@ class Alert @JvmOverloads constructor(context: Context,
      */
     private fun hide() {
         try {
+            if (enableOverlay) {
+                overlayView.animate().alpha(0f)
+                        .setDuration(ALERT_OVERLAY_FADE_OUT_DURATION)
+                        .setInterpolator(AccelerateInterpolator())
+            }
+
             exitAnimation.setAnimationListener(object : Animation.AnimationListener {
                 override fun onAnimationStart(animation: Animation) {
                     llAlertBackground?.setOnClickListener(null)
@@ -813,6 +832,24 @@ class Alert @JvmOverloads constructor(context: Context,
         return tvText
     }
 
+    /**
+     * Enable or disable overlay background
+     *
+     * @param True to enable, False to disable
+     * */
+    fun enableOverlay(enable: Boolean) {
+        this.enableOverlay = enable
+    }
+
+    /**
+     * Set the Overlay background color from a color resource
+     *
+     * @param color The color resource
+     * */
+    fun setOverlayBackgroundColor(@ColorInt color: Int) {
+        overlayView.setBackgroundColor(color)
+    }
+
     override fun canDismiss(): Boolean {
         return isDismissible
     }
@@ -838,5 +875,7 @@ class Alert @JvmOverloads constructor(context: Context,
          */
         private const val DISPLAY_TIME_IN_SECONDS: Long = 3000
         private const val MUL = -0x1000000
+        private const val ALERT_OVERLAY_FADE_IN_DURATION: Long = 700
+        private const val ALERT_OVERLAY_FADE_OUT_DURATION: Long = 300
     }
 }

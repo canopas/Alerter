@@ -607,6 +607,7 @@ class Alerter private constructor() {
 
         return this
     }
+
     /**
      * Disable touch events outside of the Alert
      *
@@ -728,6 +729,28 @@ class Alerter private constructor() {
      */
     private fun setActivity(activity: Activity) {
         activityWeakReference = WeakReference(activity)
+    }
+
+    /**
+     * Set the overlay background color from a color resource
+     *
+     * @param color The color resource
+     * @return This Alerter
+     */
+    fun setOverlayBackground(@ColorInt color: Int): Alerter {
+        alert?.setOverlayBackgroundColor(color)
+        return this
+    }
+
+    /**
+     * Enable or disable overlay background
+     *
+     * @param enable True to enable, False to disable
+     * @return This Alerter
+     */
+    fun enableOverlay(enable: Boolean): Alerter {
+        alert?.enableOverlay(enable)
+        return this
     }
 
     companion object {
